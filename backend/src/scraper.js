@@ -1,4 +1,5 @@
 import * as cheerio from 'cheerio';
+import { convertRecipeToMetric } from './unitConverter.js';
 
 function parseIsoDuration(duration) {
   if (!duration || typeof duration !== 'string') return '';
@@ -147,7 +148,7 @@ export async function scrapeRecipe(url) {
     }
   }
 
-  return {
+  const finalRecipe = {
     title: recipe.title.trim(),
     description: recipe.description?.trim() || '',
     image: recipe.image || '',
@@ -158,4 +159,7 @@ export async function scrapeRecipe(url) {
     ingredients: recipe.ingredients,
     instructions: recipe.instructions
   };
+
+  // Convert US/Imperial units to metric (keeping original in parentheses)
+  return convertRecipeToMetric(finalRecipe);
 }
